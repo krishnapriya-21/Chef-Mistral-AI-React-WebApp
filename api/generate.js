@@ -6,7 +6,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // The model ID and Groq client are defined outside the handler
 // to allow for potential reuse across function invocations.
-const MODEL_ID = "llama3-8b-8192";
+const MODEL_ID = "llama3-70b-8192";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
