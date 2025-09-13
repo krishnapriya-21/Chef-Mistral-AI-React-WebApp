@@ -47,7 +47,9 @@ export default async function handler(request, response) {
       } else {
         // If all retries fail, return the final error
         console.error("All retries failed. Error generating recipe:", error);
-        return response.status(500).json({ error: "Failed to generate recipe from the model after multiple attempts." });
+        // Pass the actual error message to the frontend for better debugging
+        const errorMessage = error.message || "An unknown error occurred with the model.";
+        return response.status(500).json({ error: `Failed to generate recipe: ${errorMessage}` });
       }
     }
   }
