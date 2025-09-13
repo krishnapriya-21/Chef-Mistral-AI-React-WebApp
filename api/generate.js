@@ -1,16 +1,15 @@
-import { InferenceClient } from "@huggingface/inference";
+import Groq from "groq-sdk";
 
 const MAX_RETRIES = 3;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// The model ID and Hugging Face client are defined outside the handler
+// The model ID and Groq client are defined outside the handler
 // to allow for potential reuse across function invocations.
 const MODEL_ID = "llama3-8b-8192";
-// The InferenceClient can be used with any OpenAI-compatible API, like Groq.
-// We pass the Groq API key and the custom endpoint URL.
-const hf = new InferenceClient(process.env.GROQ_API_KEY, {
-  endpoint: "https://api.groq.com/openai/v1",
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 // This function is the main handler for the Vercel serverless function.
@@ -36,9 +35,9 @@ export default async function handler(request, response) {
 
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
-      const recipeResponse = await hf.chatCompletion({
+      const recipeResponse = await groq.chat.completions.create({
         model: MODEL_ID,
-        messages: [{ role: "user", content: prompt }],
+        messages: [{ role: "user", content: prompt },],
         parameters: { max_new_tokens: 1024 },
       });
 
