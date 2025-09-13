@@ -1,5 +1,11 @@
 import { InferenceClient } from "@huggingface/inference";
 
+const MAX_RETRIES = 3;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// The model ID and Hugging Face client are defined outside the handler
+// to allow for potential reuse across function invocations.
 const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
 // The token is now a true environment variable on the server, not exposed to the client
 const hf = new InferenceClient(process.env.HF_TOKEN);
@@ -23,17 +29,26 @@ export default async function handler(request, response) {
   - A numbered list of "Instructions".
   `;
 
-  try {
-    const recipeResponse = await hf.chatCompletion({
-      model: MODEL_ID,
-      messages: [{ role: "user", content: prompt }],
-      parameters: { max_new_tokens: 1024 },
-    });
+  for (let i = 0; i < MAX_RETRIES; i++) {
+    try {
+      const recipeResponse = await hf.chatCompletion({
+        model: MODEL_ID,
+        messages: [{ role: "user", content: prompt }],
+        parameters: { max_new_tokens: 1024 },
+      });
 
-    const recipe = recipeResponse.choices[0].message.content;
-    return response.status(200).json({ recipe });
-  } catch (error) {
-    console.error("Error generating recipe:", error);
-    return response.status(500).json({ error: "Failed to generate recipe" });
+      const recipe = recipeResponse.choices[0].message.content;
+      return response.status(200).json({ recipe });
+    } catch (error) {
+      console.error(`Attempt ${i + 1} failed:`, error.message);
+      if (i < MAX_RETRIES - 1) {
+        // Wait for a second before retrying
+        await sleep(1000);
+      } else {
+        // If all retries fail, return the final error
+        console.error("All retries failed. Error generating recipe:", error);
+        return response.status(500).json({ error: "Failed to generate recipe from the model after multiple attempts." });
+      }
+    }
   }
 }
