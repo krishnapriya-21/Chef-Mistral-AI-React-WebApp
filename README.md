@@ -2,7 +2,8 @@
 
 A simple and fun React application that acts as your personal AI chef! Provide a list of ingredients you have, and Chef Mistral AI will generate a delicious recipe for you using the power of `mistralai/Mistral-7B-Instruct-v0.2`.
 
-![Image of Chef Mistral](image.png)
+**Live**
+https://chefmistralaireactwebapp.vercel.app/
 
 ## ✨ Features
 
