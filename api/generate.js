@@ -1,16 +1,15 @@
-import Groq from "groq-sdk";
+import { InferenceClient } from "@huggingface/inference";
 
 const MAX_RETRIES = 3;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // The model ID and Groq client are defined outside the handler
+// The model ID and Hugging Face client are defined outside the handler
 // to allow for potential reuse across function invocations.
-const MODEL_ID = "llama3-70b-8192";
-
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
+// The token is now a true environment variable on the server, not exposed to the client
+const hf = new InferenceClient(process.env.HF_TOKEN);
 
 // This function is the main handler for the Vercel serverless function.
 // It's an async function that takes a request and response object.
@@ -35,10 +34,10 @@ export default async function handler(request, response) {
 
   for (let i = 0; i < MAX_RETRIES; i++) {
     try {
-      const recipeResponse = await groq.chat.completions.create({
+      const recipeResponse = await hf.chatCompletion({
         model: MODEL_ID,
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 1024,
+        parameters: { max_new_tokens: 1024 },
       });
 
       const recipe = recipeResponse.choices[0].message.content;
