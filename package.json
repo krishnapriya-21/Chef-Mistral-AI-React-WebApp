@@ -1,5 +1,5 @@
 {
-  "name": "chef-mistral-ai",
+  "name": "chef_mistral_ai",
   "private": true,
   "version": "0.0.0",
   "type": "module",
