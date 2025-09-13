@@ -37,8 +37,8 @@ export default async function handler(request, response) {
     try {
       const recipeResponse = await groq.chat.completions.create({
         model: MODEL_ID,
-        messages: [{ role: "user", content: prompt },],
-        parameters: { max_new_tokens: 1024 },
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 1024,
       });
 
       const recipe = recipeResponse.choices[0].message.content;
