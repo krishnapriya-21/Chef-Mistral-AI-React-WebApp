@@ -7,7 +7,7 @@ A simple and fun React application that acts as your personal AI chef! Provide a
 ## ✨ Features
 
 - **Ingredient-based Recipes**: Get recipe suggestions based on the ingredients you have on hand.
-- **AI-Powered**: Utilizes the `mistralai/Mistral-7B-Instruct-v0.2` model through the Hugging Face Inference API.
+- **Secure AI-Powered Recipes**: Utilizes the `mistralai/Mistral-7B-Instruct-v0.2` model via a secure serverless function, ensuring API keys are never exposed on the client-side.
 - **Simple Interface**: Easily add ingredients and generate a recipe with a single click.
 - **Loading State**: A friendly message lets you know the chef is at work while the recipe is being created.
 - **Markdown Support**: Displays the generated recipe with formatting for easy reading.
@@ -25,7 +25,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/chef-mistral-ai-react.git
+    git clone https://github.com/krishnapriya-21/Chef-Mistral-AI-React-WebApp.git
     cd chef-mistral-ai-react
     ```
 
@@ -36,16 +36,16 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Configuration
 
-This project requires a Hugging Face User Access Token to communicate with the Inference API.
+This project requires a Hugging Face User Access Token for local development.
 
-1.  If you don't have one, create a Hugging Face account and generate a new access token with `read` permissions from your Hugging Face settings.
+1.  Create a Hugging Face account and generate a new access token with `read` permissions from your Hugging Face settings.
 
 2.  In the root directory of the project, create a new file named `.env`.
 
-3.  Add your Hugging Face token to the `.env` file. Vite requires environment variables exposed to the client to be prefixed with `VITE_`.
+3.  Add your Hugging Face token to the `.env` file. This file is listed in `.gitignore` and will not be committed.
 
     ```
-    VITE_HF_TOKEN="hf_your_token_here"
+    HF_TOKEN="hf_your_token_here"
     ```
 
 ## 🏃‍♂️ Running the Application
@@ -59,11 +59,21 @@ This project requires a Hugging Face User Access Token to communicate with the I
 
 3.  Start adding ingredients to the list and click "Get Recipe!" to see the magic happen.
 
+## 🌐 Deployment
+
+This application is deployed on Vercel, which automatically handles the serverless function in the `/api` directory.
+
+1.  Push your code to your GitHub repository.
+2.  Import your repository into Vercel.
+3.  In the Vercel project settings, add an environment variable named `HF_TOKEN` with your Hugging Face token.
+4.  Vercel will deploy the app, and your secure API endpoint will be live.
+
 ## 🛠️ Built With
 
 - React - The web framework used.
 - Vite - Frontend tooling and development server.
-- @huggingface/inference - To interact with the Hugging Face Inference API.
+- Vercel - For deployment and serverless functions.
+- @huggingface/inference - Used within the serverless function to interact with the Hugging Face Inference API.
 - react-markdown - To render the recipe with proper formatting.
 
 ## 📜 Scripts
