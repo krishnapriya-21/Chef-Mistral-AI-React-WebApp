@@ -6,10 +6,15 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // The model ID and Hugging Face client are defined outside the handler
 // to allow for potential reuse across function invocations.
-const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
-// The token is now a true environment variable on the server, not exposed to the client
-const hf = new InferenceClient(process.env.HF_TOKEN);
+const MODEL_ID = "llama3-8b-8192";
+// The InferenceClient can be used with any OpenAI-compatible API, like Groq.
+// We pass the Groq API key and the custom endpoint URL.
+const hf = new InferenceClient(process.env.GROQ_API_KEY, {
+  endpoint: "https://api.groq.com/openai/v1",
+});
 
+// This function is the main handler for the Vercel serverless function.
+// It's an async function that takes a request and response object.
 export default async function handler(request, response) {
   // Vercel automatically parses the body for POST requests
   const { ingredientsList } = request.body;
